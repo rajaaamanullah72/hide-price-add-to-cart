@@ -6,4 +6,4 @@ It enabled the user to hide price or add to cart or either one of them for a spe
 
 Admin can configure it for specific products and categories also.
 
-Confifuration of plugin can be found in "Hide Price and ATC" submenu page of WooCommerce.
+Configuration of plugin can be found in "Hide Price and ATC" submenu page of WooCommerce.
