@@ -180,11 +180,11 @@ class AM_Hide_Price {
 
 		if ( in_array( $product_id, (array) $products ) ) {
 
-			return $replace_add_to_cart_text;
+			return true;
 
 		} elseif ( ! empty( $categories ) && has_term( $categories, 'product_cat', $product_id ) ) {
 
-			return $replace_add_to_cart_text;
+			return true;
 		}
 	}
 }
