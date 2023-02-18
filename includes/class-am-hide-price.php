@@ -18,7 +18,7 @@ defined('ABSPATH') || exit;
 class AM_Hide_Price {
 
 	/**
-	 * Setup class.
+	 * Constructor of class.
 	 */
 	public function __construct() {
 
@@ -38,11 +38,16 @@ class AM_Hide_Price {
 
 	/**
 	 * Replace price HTML.
+	 * 
+	 * @param string $price_html HTML of price including currency sign
+	 * @param WC_Product $product Object of WC_Product class.
+	 * 
+	 * @return string
 	 */
-	public function replace_price_html($html, $product) {
+	public function replace_price_html($price_html, $product) {
 
 		if (!$this->is_user_role_applicable()) {
-			return $html;
+			return $price_html;
 		}
 
 		$product_id = $product->is_type('variation') ? $product->get_parent_id() : $product->get_id();
@@ -58,16 +63,21 @@ class AM_Hide_Price {
 
 			return $replace_price_text;
 		}
-		return $html;
+		return $price_html;
 	}
 
 	/**
 	 * Replace archive add to cart.
+	 * 
+	 * @param string $link Link html of add to cart button.
+	 * @param WC_Product $product
+	 * 
+	 * @return string
 	 */
 	public function replace_archive_add_to_cart($link, $product) {
 
 		if (!$this->is_user_role_applicable()) {
-			return $html;
+			return $link;
 		}
 
 		$product_id = $product->is_type('variation') ? $product->get_parent_id() : $product->get_id();
@@ -88,9 +98,10 @@ class AM_Hide_Price {
 	 * Replace simple add to cart.
 	 */
 	public function replace_simple_add_to_cart() {
+		global $product;
 
 		if (!$this->is_user_role_applicable()) {
-			return $html;
+			return;
 		}
 
 		if ($this->is_replace_add_to_cart($product)) {
@@ -103,50 +114,61 @@ class AM_Hide_Price {
 	 * Replace variable add to cart.
 	 */
 	public function replace_variable_add_to_cart() {
+		global $product;
 
 		if (!$this->is_user_role_applicable()) {
-			return $html;
+			return;
 		}
-
-		remove_action('woocommerce_single_variation', 'woocommerce_single_variation_add_to_cart_button', 20);
-		add_action('woocommerce_single_variation', array($this, 'replace_add_to_cart_text'), 30);
+		if ($this->is_replace_add_to_cart($product)) {
+			remove_action('woocommerce_single_variation', 'woocommerce_single_variation_add_to_cart_button', 20);
+			add_action('woocommerce_single_variation', array($this, 'replace_add_to_cart_text'), 30);
+		}
 	}
 
 	/**
 	 * Replace external add to cart.
 	 */
 	public function replace_external_add_to_cart() {
+		global $product;
 
 		if (!$this->is_user_role_applicable()) {
-			return $html;
+			return;
 		}
 
-		remove_action('woocommerce_external_add_to_cart', 'woocommerce_external_add_to_cart', 30);
-		add_action('woocommerce_external_add_to_cart', array($this, 'replace_add_to_cart_text'), 30);
+		if ($this->is_replace_add_to_cart($product)) {
+			remove_action('woocommerce_external_add_to_cart', 'woocommerce_external_add_to_cart', 30);
+			add_action('woocommerce_external_add_to_cart', array($this, 'replace_add_to_cart_text'), 30);
+		}
 	}
 
 	/**
 	 * Replace grouped add to cart.
 	 */
 	public function replace_grouped_add_to_cart() {
+		global $product;
 
 		if (!$this->is_user_role_applicable()) {
-			return $html;
+			return;
 		}
-
-		remove_action('woocommerce_grouped_add_to_cart', 'woocommerce_grouped_add_to_cart', 30);
-		add_action('woocommerce_grouped_add_to_cart', array($this, 'replace_add_to_cart_text'), 30);
+		if ($this->is_replace_add_to_cart($product)) {
+			remove_action('woocommerce_grouped_add_to_cart', 'woocommerce_grouped_add_to_cart', 30);
+			add_action('woocommerce_grouped_add_to_cart', array($this, 'replace_add_to_cart_text'), 30);
+		}
 	}
 
 	/**
 	 * return replace add to cart text.
+	 * 
+	 * @return string
 	 */
 	public function replace_add_to_cart_text() {
-		return get_option('aman_replace_add_to_cart_text');
+		echo wp_kses_post(get_option('aman_replace_add_to_cart_text'));
 	}
 
 	/**
 	 * Is product applicable to replace add to cart button.
+	 * 
+	 * @return bool
 	 */
 	public function is_user_role_applicable() {
 
@@ -165,6 +187,10 @@ class AM_Hide_Price {
 
 	/**
 	 * Is product applicable to replace add to cart button.
+	 * 
+	 * @param WC_Prodcut $product
+	 * 
+	 * @return bool
 	 */
 	public function is_replace_add_to_cart($product) {
 

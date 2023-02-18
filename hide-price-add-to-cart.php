@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Plugin Name: WooCommerce hide price and add to cart
  * Plugin URI: https://www.upwork.com/freelancers/~016b702b983b9e346c
@@ -13,14 +14,14 @@
  *
  */
 
-defined( 'ABSPATH' ) || exit;
+defined('ABSPATH') || exit;
 
-if ( ! defined( 'AM_HIDE_PRICE_URL' ) ) {
-	define( 'AM_HIDE_PRICE_URL', plugin_dir_url( __FILE__ ) );
+if (!defined('AM_HIDE_PRICE_URL')) {
+	define('AM_HIDE_PRICE_URL', plugin_dir_url(__FILE__));
 }
 
-if ( ! defined( 'AM_HIDE_PRICE_PLUGIN_DIR' ) ) {
-	define( 'AM_HIDE_PRICE_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+if (!defined('AM_HIDE_PRICE_PLUGIN_DIR')) {
+	define('AM_HIDE_PRICE_PLUGIN_DIR', plugin_dir_path(__FILE__));
 }
 
 require_once AM_HIDE_PRICE_PLUGIN_DIR . 'includes/class-am-hide-price-main.php';
